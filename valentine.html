@@ -156,7 +156,7 @@
 </head>
 <body>
   <!-- Background music (starts after interaction for mobile compatibility) -->
-  <audio id="bgMusic" loop>
+  <audio id="bgMusic" loop preload="auto">
     <source src="https://raw.githubusercontent.com/jboy457/jboy457.github.io/main/samuelfjohanns-in-love-116205.mp3" type="audio/mpeg">
   </audio>
   <div class="hearts"></div>
@@ -164,11 +164,14 @@
   <div class="card">
     <h1>Onome, Will You Be My Valentine? 💘</h1>
     <p>
-      From the little laughs to the moments that make my day brighter,
-      I truly cherish you more than words can say.
-      <br /><br />
-      Would you make this Valentine’s Day extra special with me?
-    </p>
+From the little laughs to the moments that make my days brighter, I cherish you more than words can truly express.
+<br /><br />
+People like you are incredibly rare, and I’m endlessly grateful to the A1Tutor organization for bringing our paths together. You’ve been more than just <strong>Onome</strong> to me  you’ve become someone deeply special in my life, and I love you more than I can easily put into words.
+<br /><br />
+I still can’t get over the fact that you stepped out of your comfort zone to come see me in Lagos, even on the very day I was traveling. That gesture meant more to me than you may ever realize. My parents still ask about you till today. They may not know your name yet, but you already hold a special place in their hearts  just as you do in mine.
+<br /><br />
+I can never thank you enough for everything you’ve been, but this is my small way of showing how deeply and sincerely I love you.
+</p>
 
     <div class="buttons">
       <button id="yesBtn" onclick="sayYes()">Yes 💖</button>
@@ -199,6 +202,18 @@
     document.head.appendChild(script);
 
     const noBtn = document.getElementById('noBtn');
+    const bgMusic = document.getElementById('bgMusic');
+
+    // Start music on first user interaction (required for mobile browsers)
+    function startMusicOnce() {
+      bgMusic.volume = 0.6;
+      bgMusic.play().catch(() => {});
+      document.removeEventListener('click', startMusicOnce);
+      document.removeEventListener('touchstart', startMusicOnce);
+    }
+
+    document.addEventListener('click', startMusicOnce);
+    document.addEventListener('touchstart', startMusicOnce);
     const container = document.querySelector('.buttons');
 
     function moveNoButton() {
@@ -225,6 +240,9 @@
 
       launchConfetti();
 
+      // Store YES click so you can verify later on the same device
+      localStorage.setItem('onomeValentineAnswer', 'YES');
+
       document.body.innerHTML = `
         <div style="
           height:100vh;
@@ -240,10 +258,11 @@
           <div>
             <h1 style="font-size:clamp(2.2rem, 6vw, 3rem);">Yay, Onome!!! 💕</h1>
             <p style="font-size:clamp(1.1rem, 4vw, 1.5rem); max-width:520px; margin:auto; line-height:1.6;">
-              I really, really cherish you — your kindness, your energy,
+              I really, really cherish you  your kindness, your energy,
               and the way you make everything feel warmer just by being you.
               <br /><br />
-              Thank you for being my Valentine 💖
+              Thank you for being my Valentine 💖<br /><br />
+              <span style="font-size:1rem; opacity:0.9;">(She clicked YES 💕)</span>
             </p>
           </div>
         </div>
