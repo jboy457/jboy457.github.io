@@ -75,12 +75,13 @@
 
     button {
       border: none;
-      padding: 0.8rem 2rem;
+      padding: 0;
       font-size: 1rem;
       border-radius: 999px;
       cursor: pointer;
       font-weight: 600;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
     #yesBtn {
@@ -105,8 +106,19 @@
       background: #f1f1f1;
       color: #555;
       position: absolute;
-      right: 0;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      width: 120px;
+      height: 44px;
+      min-width: 120px;
+      min-height: 44px;
+      max-width: 120px;
+      max-height: 44px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transform: translateZ(0);
     }
 
     .hearts {
