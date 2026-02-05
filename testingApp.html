@@ -182,45 +182,23 @@ I can never thank you enough for everything you’ve been, but this is my small 
 </p>
 
     <div class="buttons">
-      <button id="yesBtn" onclick="sayYes()">Yes 💖</button>
+      <button id="yesBtn">Yes 💖</button>
       <button id="noBtn">No 🙈</button>
     </div>
   </div>
 
   <script>
-    // Confetti
-    function launchConfetti() {
-      const count = 150;
-      const defaults = { origin: { y: 0.6 } };
-      function fire(particleRatio, opts) {
-        confetti(Object.assign({}, defaults, opts, {
-          particleCount: Math.floor(count * particleRatio)
-        }));
-      }
-      fire(0.25, { spread: 26, startVelocity: 55 });
-      fire(0.2, { spread: 60 });
-      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-      fire(0.1, { spread: 120, startVelocity: 45 });
-    }
-
-    // Load confetti lib
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js';
-    document.head.appendChild(script);
-
     const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const container = document.querySelector('.buttons');
     const bgMusic = document.getElementById('bgMusic');
 
-    // Attempt autoplay on page load (will work on some desktop browsers)
+    // ---------------- AUDIO ----------------
     window.addEventListener('load', () => {
       bgMusic.volume = 0.6;
-      bgMusic.play().catch(() => {
-        // Autoplay blocked on mobile; fallback will trigger on interaction
-      });
+      bgMusic.play().catch(() => {});
     });
 
-    // Fallback for browsers that block autoplay (mobile/iOS)
     function startMusicOnce() {
       bgMusic.volume = 0.6;
       bgMusic.play().catch(() => {});
@@ -230,8 +208,8 @@ I can never thank you enough for everything you’ve been, but this is my small 
 
     document.addEventListener('click', startMusicOnce);
     document.addEventListener('touchstart', startMusicOnce);
-    const container = document.querySelector('.buttons');
 
+    // ---------------- NO BUTTON DODGE ----------------
     function moveNoButton() {
       const containerRect = container.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
@@ -243,67 +221,51 @@ I can never thank you enough for everything you’ve been, but this is my small 
       const x = Math.random() * maxX;
       const y = Math.random() * maxY;
 
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
     }
 
-    // Dodge on hover AND click attempt
     noBtn.addEventListener('mouseenter', moveNoButton);
     noBtn.addEventListener('mousedown', moveNoButton);
-    noBtn.addEventListener('touchstart', moveNoButton);px`;
-      noBtn.style.top = `${y}px`;
-    }
-
-    noBtn.addEventListener('mouseenter', moveNoButton);
     noBtn.addEventListener('touchstart', moveNoButton);
 
-    function sayYes() {
-      const music = document.getElementById('bgMusic');
-      music.volume = 0.6;
-      music.play().catch(() => {});
-
-      launchConfetti();
-
-      // Store YES click so you can verify later on the same device
-      localStorage.setItem('onomeValentineAnswer', 'YES');
-
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:linear-gradient(135deg, #ff758f, #ffb3c6);
-          font-family:'Playfair Display', serif;
-          text-align:center;
-          color:white;
-          padding:2rem;
-        ">
-          <div>
-            <h1 style="font-size:clamp(2.2rem, 6vw, 3rem);">Yay, Onome!!! 💕</h1>
-            <p style="font-size:clamp(1.1rem, 4vw, 1.5rem); max-width:520px; margin:auto; line-height:1.6;">
-              I really, really cherish you  your kindness, your energy,
-              and the way you make everything feel warmer just by being you.
-              <br /><br />
-              Thank you for being my Valentine 💖<br /><br />
-              <span style="font-size:1rem; opacity:0.9;">(She clicked YES 💕)</span>
-            </p>
-          </div>
-        </div>
-      `;
+    // ---------------- CONFETTI ----------------
+    function launchConfetti() {
+      if (typeof confetti !== 'function') return;
+      confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
     }
 
-    // Generate floating hearts
+    const confettiScript = document.createElement('script');
+    confettiScript.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js';
+    document.head.appendChild(confettiScript);
+
+    // ---------------- YES BUTTON ----------------
+    function sayYes() {
+      localStorage.setItem('onomeValentineAnswer', 'YES');
+      launchConfetti();
+
+      document.body.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ff758f,#ffb3c6);font-family:Playfair Display,serif;text-align:center;color:white;padding:2rem;">'
+        + '<div>'
+        + '<h1 style="font-size:clamp(2.2rem,6vw,3rem);">Yay, Onome!!! 💕</h1>'
+        + '<p style="font-size:clamp(1.1rem,4vw,1.5rem);max-width:520px;margin:auto;line-height:1.6;">'
+        + 'I really, really cherish you. Your kindness, your energy, and the way you make everything feel warmer just by being you.'
+        + '<br><br>Thank you for being my Valentine 💖'
+        + '</p>'
+        + '</div></div>';
+    }
+
+    yesBtn.addEventListener('click', sayYes);
+
+    // ---------------- FLOATING HEARTS ----------------
     const heartsContainer = document.querySelector('.hearts');
     for (let i = 0; i < 20; i++) {
       const heart = document.createElement('div');
       heart.className = 'heart';
       heart.style.left = Math.random() * 100 + '%';
       heart.style.animationDelay = Math.random() * 8 + 's';
-      heart.style.transform = `scale(${0.6 + Math.random()}) rotate(45deg)`;
+      heart.style.transform = 'scale(' + (0.6 + Math.random()) + ') rotate(45deg)';
       heartsContainer.appendChild(heart);
     }
   </script>
 </body>
 </html>
-
