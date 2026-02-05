@@ -212,7 +212,15 @@ I can never thank you enough for everything you’ve been, but this is my small 
     const noBtn = document.getElementById('noBtn');
     const bgMusic = document.getElementById('bgMusic');
 
-    // Start music on first user interaction (required for mobile browsers)
+    // Attempt autoplay on page load (will work on some desktop browsers)
+    window.addEventListener('load', () => {
+      bgMusic.volume = 0.6;
+      bgMusic.play().catch(() => {
+        // Autoplay blocked on mobile; fallback will trigger on interaction
+      });
+    });
+
+    // Fallback for browsers that block autoplay (mobile/iOS)
     function startMusicOnce() {
       bgMusic.volume = 0.6;
       bgMusic.play().catch(() => {});
@@ -228,13 +236,21 @@ I can never thank you enough for everything you’ve been, but this is my small 
       const containerRect = container.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
-      const maxX = containerRect.width - btnRect.width;
-      const maxY = containerRect.height - btnRect.height;
+      const padding = 10;
+      const maxX = containerRect.width - btnRect.width - padding;
+      const maxY = containerRect.height - btnRect.height - padding;
 
       const x = Math.random() * maxX;
       const y = Math.random() * maxY;
 
       noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
+    // Dodge on hover AND click attempt
+    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('mousedown', moveNoButton);
+    noBtn.addEventListener('touchstart', moveNoButton);px`;
       noBtn.style.top = `${y}px`;
     }
 
@@ -290,3 +306,4 @@ I can never thank you enough for everything you’ve been, but this is my small 
   </script>
 </body>
 </html>
+
